@@ -49,6 +49,7 @@ app.get('/api/usda-zone', async (req, res) => {
     })
     .catch((error) => {
       console.log('geo response error: ', error);
+      return;
     });
   if (geoResult && geoResult.postal_code) {
     const usdaZoneResult = await axios
@@ -60,7 +61,7 @@ app.get('/api/usda-zone', async (req, res) => {
         console.log('geo result ', geoResult);
         console.log('usda query param: ', geoResult.postal_code);
         console.log('usda response error', error);
-        return res.send({ error: 'Non-US Postal Code' });
+        return;
       });
     if (usdaZoneResult && usdaZoneResult.zone) {
       res.send({
