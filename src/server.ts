@@ -34,6 +34,7 @@ app.get('/api/usda-zone', async (req, res) => {
   app.set('trust proxy', true);
   let IP = req.ip;
   if (IP.startsWith('::ffff:')) {
+    console.log('starts with ::ffff:', IP);
     IP = IP.slice(7);
   }
   const API_KEY = process.env.ABSTRACT_API_KEY;
@@ -56,7 +57,7 @@ app.get('/api/usda-zone', async (req, res) => {
         return response.data;
       })
       .catch((error) => {
-        console.log('usda response error',error);
+        console.log('usda response error', error);
       });
     if (usdaZoneResult && usdaZoneResult.zone) {
       res.send({

@@ -33,6 +33,7 @@ app.get('/api/usda-zone', (req, res) => __awaiter(void 0, void 0, void 0, functi
     app.set('trust proxy', true);
     let IP = req.ip;
     if (IP.startsWith('::ffff:')) {
+        console.log('starts with ::ffff:', IP);
         IP = IP.slice(7);
     }
     const API_KEY = process.env.ABSTRACT_API_KEY;
