@@ -57,6 +57,8 @@ app.get('/api/usda-zone', async (req, res) => {
         return response.data;
       })
       .catch((error) => {
+        console.log('geo result ', geoResult);
+        console.log('usda query param: ', geoResult.postal_code);
         console.log('usda response error', error);
       });
     if (usdaZoneResult && usdaZoneResult.zone) {
