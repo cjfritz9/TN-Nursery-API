@@ -31,7 +31,11 @@ app.use((req, _res, next) => {
 });
 
 app.get('/api/usda-zone', async (req, res) => {
-  const IP = req.ip;
+  app.set('trust proxy', true);
+  let IP = req.ip;
+  if (IP.startsWith('::ffff:')) {
+    IP = IP.slice(7);
+  }
   const API_KEY = process.env.ABSTRACT_API_KEY;
   const geoResult = await axios
     .get(
@@ -40,33 +44,35 @@ app.get('/api/usda-zone', async (req, res) => {
       }`
     )
     .then((response) => {
-      console.log(response.data);
       return response.data;
     })
     .catch((error) => {
-      console.log(error);
+      console.log('geo response error: ', error);
     });
   if (geoResult && geoResult.postal_code) {
     const usdaZoneResult = await axios
       .get(`https://phzmapi.org/${geoResult.postal_code}.json`)
       .then((response) => {
-        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
-        console.log(error);
+        console.log('usda response error',error);
       });
     if (usdaZoneResult && usdaZoneResult.zone) {
-      res.send(`${usdaZoneResult.zone}, ${IP}`);
+      res.send({
+        success: 'Success',
+        usda_zone: usdaZoneResult.zone
+      });
     } else {
-      console.log();
+      console.log('usda zone result error: ', usdaZoneResult);
       res.send({ error: 'Check Provided Information' });
     }
   } else {
+    console.log('geo location result error: ', geoResult);
     res.send({ error: 'Check Provided Information' });
   }
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`Server is listening on port: ${PORT}`);
 });
