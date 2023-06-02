@@ -15,7 +15,7 @@ dotenv.config();
 export const app = express();
 const PORT = process.env._PORT || 8080;
 app.use(cors({
-    origin: '*'
+    origin: 'https://www.tnnursery.net/'
 }));
 app.use(express.json());
 app.use((req, _res, next) => {
